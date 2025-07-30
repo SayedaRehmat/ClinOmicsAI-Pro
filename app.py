@@ -1,5 +1,3 @@
 import streamlit as st
-
 st.title("Hello ClinOmics AI")
-
-st.write("Running Streamlit standalone – should work.")
+st.write("If you see this, Streamlit frontend is binding correctly.")
