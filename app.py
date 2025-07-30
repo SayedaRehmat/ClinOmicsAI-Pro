@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from fpdf import FPDF
 
-BASE_API = "https://clinomics-ai.onrender.com"  # Your FastAPI URL
+BASE_API = "https://clinomicsai-pro.onrender.com"
 
 st.set_page_config(page_title="ClinOmics AI Pro", layout="wide")
 
