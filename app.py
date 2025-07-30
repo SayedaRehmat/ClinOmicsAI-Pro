@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = "https://your-fastapi-url.onrender.com"  # Update with FastAPI deployment URL
+API_URL = "  https://clinomicsai-pro.onrender.com"  # Update with FastAPI deployment URL
 
 st.title("🔬 ClinOmics AI - Gene Insight")
 
