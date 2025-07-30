@@ -1,4 +1,2 @@
-fastapi
-uvicorn
-streamlit
-requests
+streamlit==1.32.0
+requests==2.31.0
