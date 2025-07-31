@@ -1,29 +1,45 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import pandas as pd
 
-app = FastAPI()
+app = FastAPI(title="ClinOmics AI Backend")
 
-# Allow Streamlit frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Load and normalize CSVs
+expression_df = pd.read_csv("expression.csv")
+mutation_df = pd.read_csv("mutations.csv")
+drug_df = pd.read_csv("dgidb_drugs.csv")
+
+# Normalize gene column
+mutation_df["Gene"] = mutation_df["Gene"].str.upper()
+drug_df["Gene"] = drug_df["Gene"].str.upper()
 
 @app.get("/")
 def root():
     return {"message": "ClinOmics AI API is running"}
 
 @app.get("/expression/{gene}")
-def expression_data(gene: str):
-    # Replace with actual DB/API logic
-    return {"gene": gene, "expression_level": 42.0}
+def get_expression(gene: str):
+    gene = gene.upper()
+    row = expression_df[expression_df["Gene"].str.upper() == gene]
+    if row.empty:
+        return {"error": "No expression data"}
+    return {
+        "gene": gene,
+        "normal_tpm": row.iloc[0]["Normal_TPM"],
+        "tumor_tpm": row.iloc[0]["Tumor_TPM"]
+    }
 
 @app.get("/mutation/{gene}")
-def mutation_data(gene: str):
-    return {"gene": gene, "mutations": ["p53-R175H", "p53-R248Q"]}
+def get_mutation(gene: str):
+    gene = gene.upper()
+    result = mutation_df[mutation_df["Gene"] == gene]
+    if result.empty:
+        return []
+    return result.to_dict(orient="records")
 
 @app.get("/drug/{gene}")
-def drug_matches(gene: str):
-    return {"gene": gene, "drugs": ["Olaparib", "Niraparib"]}
+def get_drugs(gene: str):
+    gene = gene.upper()
+    result = drug_df[drug_df["Gene"] == gene]
+    if result.empty:
+        return []
+    return result[["Drug", "Interaction"]].to_dict(orient="records")
